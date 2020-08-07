@@ -14,7 +14,7 @@ Our framework is based on FedAvg, which computes the weighted average of local p
 
 $$W_{global}^{t+1} = \sum_{i=1}^n\frac{C_i}{C}W_i^t$$. 
 
-Although some researches protect $C_i$ from semi-honest attackers by means of multi-party multiplication, leakage of $C_i$ does not help attackers to reconstruct any data. In addition, $C$ can also be computed based on multi-party-add since it only needs add operation to get $C$. Thus, we can set $G_i = C_i * W_i$ to simplify the expression and computation. I.e., multi-party multiplication is unnecessary in this framework. Then the goal of each epoch is:
+Although some researches protect $C_i$ from semi-honest attackers by means of multi-party multiplication, leakage of $C_i$ does not help attackers to reconstruct any data. In addition, $C$ can also be aggregated based on multi-party addition since it only needs addition to compute $C$ from $C_i$s. Thus, we can set $G_i = C_i * W_i$ to simplify the expression and computation. I.e., multi-party multiplication is unnecessary in this framework. Then the goal of each epoch is:
 
 $$ W_{global}^{t+1} = \frac{\sum_{i=1}^nG_i^t}{C} $$
 
@@ -73,7 +73,7 @@ The learning method is based on FedAvg algorithm\cite{mcmahan2016communicationef
     and it is the target of FedAvg algorithm. $W_{global}$ is used to update the global model and the server will prepare for the next learning round.
 \end{enumerate}
 
-$C$ is obtained in the same manner: replace $G_i$ with $C_i$ and the server can get $C$ privately. The pseudocode of secure learning is illustrated in Algorithm ~\ref{sec-learning}. Neither the server nor any leader can figure out what exactly a certain party's parameter is based on the information it receives. 
+$C$ can be obtained in the same manner: replace $G_i$ with $C_i$ and the server can get $C$ privately. In fact $C_i$ and $G_i$ are sent to leaders at the same time. Alternatively, $C_i$s can also be directly sent to the server without encrypted since they do not help attackers understanding the parameters. When the system decides to discard a party $P_i$ due to $B$, it also needs to discard $C_i$, which will change the amount of training data $C$. The pseudocode of secure learning is illustrated in Algorithm ~\ref{sec-learning}. Neither the server nor any leader can figure out what exactly a certain party's parameter is based on the information it can receive. 
 
 
 \begin{algorithm}

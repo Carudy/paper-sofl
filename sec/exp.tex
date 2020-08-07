@@ -15,7 +15,7 @@ Although our work does not modify the learning module compared to other federate
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/leader-time.png}
-    \caption{Total time spent on computation for DH protocols of Bonawitz's FedAvg and SOFL. The number of clients is set as 100.}
+    \caption{Total time spent on computation for DH protocols of Bonawitz's FedAvg\cite{Practical} and SOFL. The number of clients is set as 100.}
     \label{leader-time}
 \end{figure}
 
@@ -32,14 +32,14 @@ As introduced before, the additional computation insignificant compared to the c
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/comm-epoch.png}
-    \caption{The amount of communications in learning process with 100 clients. The situation is without dropout.}
+    \caption{The amount of communications in learning process with 100 clients without dropout.}
     \label{comm-epoch}
 \end{figure}
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/comm-client.png}
-    \caption{The amount of communications in learning process varies with amount of clients. The $Epoch_{max}$ is 30 and there is no dropout.}
+    \caption{The amount of communications in learning process varies VS  the amount of clients. The $Epoch_{max}$ is fixed to 30 and there is no dropout.}
     \label{comm-client}
 \end{figure}
 
@@ -51,9 +51,17 @@ Robustness of SOFL is mainly based on the re-organizing process, which happens w
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/comm-crash.png}
-    \caption{The average amount of communications with different crash rates.}
+    \caption{The average amount of communications VS different crash rates.}
     \label{comm-crash}
 \end{figure}
 
-\subsubsection{Network Delay}
-Sometimes several packets cannot be received in time due to network delays. Bonawitz etc.'s method\cite{Practical} has considered this issue and it has a pseudorandom generator (PRG) based mask algorithm to solve it. In SOFL's secure learning process, a leader will not be waiting for participants'parameters permanently. It has a time limit, over which the leader will abandon waiting and send the current $B_j$ to server (introduced in Section~\ref{sec:sofl}). Under this circumstance, some common parties will be recognized as lost connection and removed from the participant-group without contributing to the learning process. However, if a party does not lose the connection while its message reached the leader late because of network delay, discarding it may have infuence on the learning speed and result. Therefore, we carried out several experiments to observe how network delay impacts the learning. 
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\columnwidth]{img/dropout-acc.png}
+    \caption{The average amount of communications with different crash rates.}
+    \label{dropout-acc}
+\end{figure}
+
+\subsubsection{Network Delay and Dropout}
+Sometimes several packets cannot be received in time due to network delays or dropouts. Bonawitz etc.'s method\cite{Practical} has considered this issue and it has a pseudorandom generator (PRG) based mask algorithm to solve it. In SOFL's secure learning process, a leader will not be waiting for participants'parameters permanently. It has a time limit, over which the leader will abandon waiting and send the current $B_j$ to server (introduced in Section~\ref{sec:sofl}). Under this circumstance, some common parties will be recognized as lost connection and removed from the participant-group without contributing to the learning process. However, if a party does not lose the connection while its message reached the leader late because of network delay, discarding it may have infuence on the learning speed and result. We set the dropout rate to show the probability that a common party fails to send its parameters to leaders due to packet loss or network delay. Therefore, we carried out several experiments to observe how network delay impacts the learning. The result is shown in Figure~\ref{dropout-acc}. We observed that the infuence of dropouts on the accuracy is trivial. The accucay reduced by only 0.002 in the worst case, which may be caused by biases. Therefore, SOFL have strong resistence to packet loss. 
+
