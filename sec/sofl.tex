@@ -62,7 +62,9 @@ The learning method is based on FedAvg algorithm\cite{mcmahan2016communicationef
     
     \item Each $G_i$ is divided into 3 pieces $G_{i1}$, $G_{i2}$ and $G_{i3}$, where $G_i = G_{i1} + G_{i2} + G_{i3}$. Then $G_{ij}$ is sent to the $j^{th}$ leader $L_j$ respectively.
     
-    \item When all the parties' parameters are sent, the leaders will interact with each other in order to compute the intersection of parties that have sent parameters to them, in case that there are some parties did not send parameter pieces to all leaders. Parties not included in the intersection are then removed. 
+    \item A leader $L_j$ will record a set $B_j$, which consists of the parties that have sent message to $L_j$. When all the parties' parameters are sent or time is up, the leaders will send $B_j$s to the server and the server will compute the intersection as $B$. Then $B$ is sent back to all leaders. Each leader reserve parameter shares according to $B$ in case that there are some parties did not send parameter pieces to all leaders successfully. 
+
+    Parties not included in the intersection are then removed. 
 
     \item Leader $L_j$ then computes the sum of the parameters $A_j = \sum_{i=1}^nG_{ij}$. Afterwards, $A_j$ will be sent to the server.
 
@@ -101,7 +103,8 @@ $C$ is obtained in the same manner: replace $G_i$ with $C_i$ and the server can 
         \Function {leader\_send}{$K_j$}
             \State $B_j \gets \emptyset$
             \State Receive $E_{ij}$s from all possible $P_i$ and add $i$ to $B_j$
-            \State $B \gets$ the intersection of $B_j$s (interact with other leaders)
+            \State Send $B_j$ to $S$
+            \State Receive $B$ from $S$
             \State Remove $E_{ij}$s whose $i$ is not included in $B$
             \State $G_{ij} \gets \Call{Dec}{K_{ij}, E_{ij}}$ for each $E_{ij}$
             \State $A_j \gets \sum_{i=1}^nG_{ij}$
