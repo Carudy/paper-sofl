@@ -7,7 +7,7 @@ In this section, we introduce the attack model and detailed design of the propos
     \item $\textbf{N}_l$: Number of leaders elected from $N$ parties.
     \item $\textbf{L}$: The set of leaders.
     \item $\textbf{W}$: The parameters of a machine learning model. $W_i$ means the $i^{th}$ party's local parameter, and $W_{global}$ is the global model's parameter.
-    \item $\textbf{C}$: $C = \sum_{i=1}^nC_i$, where $C_i$ is the number of data used to train the model for the $i^{th}$ party $P_i$.
+    \item $\textbf{C}$: The total number of training data. $C = \sum_{i=1}^nC_i$, where $C_i$ is the number of training data of the $i^{th}$ party $P_i$.
 \end{itemize}
 
 Our framework is based on FedAvg, which computes the weighted average of local parameters as the global parameter. In epoch $t+1$, the server's target is to compute the following formula:
@@ -37,11 +37,11 @@ Heart-beat is used permanently to detect whether a leader is active: we set an i
 
 To provide higher security, ``leader-tenure'' can be adopted as an alternative enhancement. I.e., the system will revoke one's leadership regularly, and randomly select another common party as the new leader. This method can prevent collusion attacks where the server selects leaders dishonestly. It will be discussed later in Section IV. The interval can be set as 3 epoch's learning.
 
-In the among-institutions environment, the election process is different because there is not a server helping to appoint leaders. Therefore, the leader election process is more Raft-like: first, the parties act as candidates and send ``self-recommendation'' to the others with different delays. Then, a party will vote for the first $N_l$ parties that it has received ``self-recommendation'' from. The $N_l$ parties with the most votes become leaders. The detailed algorithm can be referred to as Raft algorithm\cite{Raft}.
+In the among-institutions environment, the election process is different because there is not a server helping to appoint leaders. Therefore, the leader election process is more Raft-like: first, the parties act as candidates and send ``self-recommendation'' to the others with different delays. Then, a party will vote for the first $N_l$ parties that it has received ``self-recommendation'' from. The $N_l$ parties with the most votes become leaders. The detailed algorithm can be referred to as Raft algorithm~\cite{Raft}.
 
 
 \subsubsection{\textbf{Key exchange}}
-When the parties receive $L$, they will know who the leaders are. In order to communicate with the leaders privately, the parties need to run key-exchange protocols to share secret keys. We employ Diffie-Hellman (DH) protocol\cite{DH} to realize it. Google has experimented with DH in federated learning\cite{Practical} and there are some techniques to improve the performance, which our framework will also adopt.
+When the parties receive $L$, they will know who the leaders are. In order to communicate with the leaders privately, the parties need to run key-exchange protocols to share secret keys. We employ Diffie-Hellman (DH) protocol~\cite{DH} to realize it. Google has experimented with DH in federated learning~\cite{Practical} and there are some techniques to improve the performance, which our framework will also adopt.
 
 In a server-based environment, a server can communicate with any clients while the parties are unfamiliar with each other. Therefore, the key exchange process should be conducted in virtue of the server. In the premise that the server is honest-but-curious, parties can exchange keys in a ``man-in-the-middle'' scheme, where the ``man'' is the honest server. The server delivers information for the parties and leaders. This process is secure because information leaked to the server in key-exchange protocols is useless.
 
@@ -55,7 +55,7 @@ After the key exchange process, each party-leader pair, a party $P_i$ with a lea
 \end{figure}
 
 \subsubsection{\textbf{Secure learning}}
-The learning method is based on FedAvg algorithm\cite{mcmahan2016communicationefficient}. A secure multi-party addition protocol is used to realize privacy-preserving. There are $N_l$ leaders in the system. W.l.o.g, we suppose $N_l = 3$. The process of secret sharing is illustrated as below:
+The learning method is based on FedAvg algorithm~\cite{mcmahan2016communicationefficient}. A secure multi-party addition protocol is used to realize privacy-preserving. There are $N_l$ leaders in the system. Without loss of generality, we suppose $N_l = 3$. The process of secret sharing is illustrated as below:
 
 \begin{enumerate}
     \item All the selected parties train the model locally. And a party $P_i$ will get a parameter $G_i$.
