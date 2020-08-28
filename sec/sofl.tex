@@ -40,12 +40,13 @@ In the among-institutions environment, the election process is different because
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/leader-user.png}
-    \caption{The institutions communicate with the leaders directly while all the leader-user pair share a secret key used for private communication.}
+    \caption{The institution can communicate with all users directly while all the leader-user pair share a secret key used for private communication. The server helps to forward encrypted messages from which it can know nothing.}
     \label{leader-user}
 \end{figure}
 
 \subsubsection{\textbf{Key exchange}}
-When the parties receive $L$, they will know who the leaders are. In order to communicate with the leaders privately, the parties need to run key-exchange protocols to share secret keys. We employ Diffie-Hellman (DH) protocol~\cite{DH} to realize it. Google has experimented with DH in federated learning~\cite{Practical} and there are some techniques to improve the performance, which our framework will also adopt.
+When the parties receive $L$, they will know who the leaders are. In order to communicate with the leaders privately, the parties need to run key-exchange protocols to share secret keys. We employ Diffie-Hellman (DH) protocol~\cite{DH} to realize it. 
+% Google has experimented with DH in federated learning~\cite{Practical} and there are some techniques to improve the performance, which our framework will also adopt.
 
 In a server-based environment, a server can communicate with any clients while the parties are unfamiliar with each other. Therefore, the key exchange process should be conducted in virtue of the server. In the premise that the server is honest-but-curious, parties can exchange keys in a ``man-in-the-middle'' scheme, where the ``man'' is the honest server. The server delivers information for the parties and leaders. This process is secure because information leaked to the server in key-exchange protocols is useless.
 
