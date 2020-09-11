@@ -1,4 +1,11 @@
-In this section, we briefly introduce the concepts of Federated Learning, multi-party computation and Consensus Algorithms, which are used in our proposed framework.
+In this section, we briefly introduce the concepts of key exchange, Federated Learning, multi-party computation and Consensus Algorithms, which are used in our proposed framework.
+
+\subsection{Key Exchange}
+Key exchange protocols allow several parties to share secret keys under unsafe conditions. Diffie-Hellman~\cite{DH} (DH) is a prestigious key exchange protocol. We introduce how DH protocol helps two parties to achieve agreement: suppose $a$ and $b$ wants to generate a secret key. They select a group $G$ of order q, and randomly choose a number $x_a$ and $x_b$ respectively. Then $a$ calculates $g_a = g^{x_a}$, where $g$ is a generator of $G$, and $b$ calculates $g_b = g^{x_b}$. $a$ sends $g_a$ to $b$, and $b$ sends $g_b$ to $a$. Finally they can calculate the shared secret $s_{ab}$ respectively:
+$$ s_{ab} = g_b^{x_a}  = g_a^{x_b} = g^{x_ax_b}$$
+
+In this scheme, only $g_a$ and $g_b$ are sent under an unsafe condition. Attackers cannot infer $s_{ab}$ from $g_a$ and $g_b$, therefore $a$ and $b$ can communicate privately by means of $s_{ab}$. DH is lightweight and efficient, and it can be expanded to multi-party versions easily in order to enable more parties to share pairwise keys.
+
 
 \subsection{Federated Learning}
 Federated Learning was first proposed by McMahan and the algorithm was named FedAvg~\cite{mcmahan2016communicationefficient}. FL requires a number of users to jointly train a model. It usually runs for rounds. In each round, each user will train the model based on its data and get the model's parameter. Mark $W_i^t$ as the $i^{th}$ user's parameter in the $t^{th}$ round. When all users have trained their model in round $t$, an aggregation algorithm $Agg$ will be called to compute the global model's parameter $Agg(W_1^t, W_2^t, ..., W_n^t)$, where $n$ is the total number of users. $Agg$ is weighted average in FedAvg. FL not only helps to protect users' privacy but also deals with the ``data in form of isolated islands'' problem for companies or institutions. Yang et al. also categorized FL into horizontal, vertical and hybrid styles based on the fact that whether the data shares the same feature space or entities~\cite{yang2019federated}. 

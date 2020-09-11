@@ -45,10 +45,10 @@ In the among-institutions environment, the election process is different because
 \end{figure}
 
 \subsubsection{\textbf{Key exchange}}
-When the parties receive $L$, they will know who the leaders are. In order to communicate with the leaders privately, the parties need to run key-exchange protocols to share secret keys. We employ Diffie-Hellman (DH) protocol~\cite{DH} to realize it. 
+When the parties receive $L$, they will know who the leaders are. In order to communicate with the leaders privately, the parties need to run key-exchange protocols to share secret keys. We employ Diffie-Hellman protocol~\cite{DH} to realize it. 
 % Google has experimented with DH in federated learning~\cite{Practical} and there are some techniques to improve the performance, which our framework will also adopt.
 
-In a server-based environment, a server can communicate with any clients while the parties are unfamiliar with each other. Therefore, the key exchange process should be conducted in virtue of the server. In the premise that the server is honest-but-curious, parties can exchange keys in a ``man-in-the-middle'' scheme, where the ``man'' is the honest server. The server delivers information for the parties and leaders. This process is secure because information leaked to the server in key-exchange protocols is useless.
+In a server-based environment, a server can communicate with any clients while the parties are unfamiliar with each other. Therefore, the key exchange process should be conducted in virtue of the server. In the premise that the server is honest-but-curious, parties can exchange keys in a ``man-in-the-middle'' scheme, where the ``man'' is the honest server. The server delivers information for users to help them complete DH protocol. This process is secure because information leaked to the server in key-exchange protocols is useless.
 
 After the key exchange process, each party-leader pair, a party $P_i$ with a leader $L_j$ will share a secret key $K_{ij}$. By means of $K_{ij}$ the party $P_i$ and leader $L_j$ can encrypt their data against the honest-but-curious attacker. The message $m$ can be encrypted as $Enc_{K_{ij}}(m)$. Figure~\ref{leader-user} illustrates the institution-leader-user structure. Normally, the institution and the common users only need to communicate with the leaders.
 
