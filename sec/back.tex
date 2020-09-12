@@ -1,7 +1,7 @@
 In this section, we briefly introduce the concepts of key exchange, Federated Learning, multi-party computation and Consensus Algorithms, which are used in our proposed framework.
 
 \subsection{Key Exchange}
-Key exchange protocols allow several parties to share secret keys under unsafe conditions. Diffie-Hellman~\cite{DH} (DH) is a prestigious key exchange protocol. We introduce how DH protocol helps two parties to achieve agreement: suppose $a$ and $b$ wants to generate a secret key. They select a group $G$ of order q, and randomly choose a number $x_a$ and $x_b$ respectively. Then $a$ calculates $g_a = g^{x_a}$, where $g$ is a generator of $G$, and $b$ calculates $g_b = g^{x_b}$. $a$ sends $g_a$ to $b$, and $b$ sends $g_b$ to $a$. Finally they can calculate the shared secret $s_{ab}$ respectively:
+Key exchange protocols allow several parties to share secret keys under unsafe conditions. Diffie-Hellman~\cite{DH} (DH) is a prestigious key exchange protocol. We introduce how DH protocol helps two parties to achieve agreement: suppose $a$ and $b$ want to obtain a secret key by means of DH. First they select a group $G$ of order q, and randomly choose a number $x_a$ and $x_b$ respectively. Then $a$ calculates $g_a = g^{x_a}$, where $g$ is a generator of $G$, and $b$ calculates $g_b = g^{x_b}$. $a$ sends $g_a$ to $b$, and $b$ sends $g_b$ to $a$. Finally they can calculate the shared secret $s_{ab}$ respectively:
 $$ s_{ab} = g_b^{x_a}  = g_a^{x_b} = g^{x_ax_b}$$
 
 In this scheme, only $g_a$ and $g_b$ are sent under an unsafe condition. Attackers cannot infer $s_{ab}$ from $g_a$ and $g_b$, therefore $a$ and $b$ can communicate privately by means of $s_{ab}$. DH is lightweight and efficient, and it can be expanded to multi-party versions easily in order to enable more parties to share pairwise keys.
@@ -40,6 +40,6 @@ A secret sharing scheme involves a secret $s$, a set of $n$ parties, and a colle
 
 
 \subsection{Consensus Algorithms}
-In a distributed or multi-party system, there is always a problem with consensus. I.e., in such systems parties always need to achieve agreement on a certain value. This could be difficult without any strategy because different parties may be in different statuses and have multifarious matters. Consensus algorithms are adopted to solve such problems. It is widely used in blockchain and various famous areas.
+In a distributed or multi-party system, there is always a problem with consensus. I.e., in such systems parties always need to achieve agreement on a certain value. This could be difficult without any strategy because different parties may be in different statuses and have multifarious matters. Consensus algorithms are adopted to address such problems. It is widely used in blockchain and various famous areas.
 
 Paxos was the first consensus algorithm introduced by Lamport~\cite{Paxos}. It is used in a lot of famous projects such as Ceph~\cite{Ceph}. Raft is a modification of Paxos which is more industrial-friendly~\cite{Raft}. It contains two phases: leader election and log replication. Parties can achieve agreements based on leaders. Considering that FL model is a semi-decentralized system, our framework can utilize Raft algorithm to keep several leaders, based on which MPC protocols can be executed efficiently and robustly.
