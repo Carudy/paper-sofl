@@ -9,20 +9,22 @@
 
 \begin{document}
 
-\title {SOFL: Self-organizing Federated Learning Based on Multi-party Computation and Consensus Algorithm}
+\title {DemoFL: Democratic Federated Learning Based on Multi-party Computation and Consensus Algorithm}
 
 \author{Zhaoyang~Han,
         Chunpeng~Ge,
-        and~Zhe~Liu%
-\thanks{Zhaoyang~Han, Chunpeng~Ge, and~Zhe~Liu are with the College of Computer Science and Technology, Nanjing University of Aeronautics and Astronautics, Nanjing, 210016, China. (e-mail: nuaahanzy@gmail.com; gecp@nuaa.edu.cn; sduliuzhe@gmail.com) (Corresponding author: Zhe~Liu).}
+        and~Zhe~Liu$^*$%
+\thanks{Zhaoyang~Han, Chunpeng~Ge, and~Zhe~Liu are with the College of Computer Science and Technology, Nanjing University of Aeronautics and Astronautics, Nanjing, 210016, China. (e-mail: nuaahanzy@gmail.com; gecp@nuaa.edu.cn; sduliuzhe@gmail.com) 
+
+$^*$Corresponding author: Zhe~Liu.}
 }
 
 \maketitle
 
 \begin{abstract}
-The security and privacy problem is a significant obstacle that hinders the development of artificial intelligence (AI) technologies. Federated Learning (FL) is a framework based on which numerous parties can train a machine learning model cooperatively without leaking information about their data. Parties in FL send parameters of local models instead of their data to the server to protect their local data from leaking. However, researches have proven that attackers can reveal FL parties' data through the leakage of local model parameters. Therefore, secure aggregation is critical to ensure privacy-preserving in FL frameworks. The current secure aggregation algorithms in FL rely on the parties to establish a secure channel between each other, which will lead to heavy communication costs for parties. Moreover, establishing secure channels between parties in FL may be unrealistic in some scenarios.
+Federated Learning (FL) is a framework based on which numerous parties can train a machine learning model cooperatively without leaking information about their data. However, attackers can reconstruct FL parties' data through the leaked parameters. Therefore, secure aggregation is critical to ensure privacy-preserving in FL frameworks. The current secure aggregation algorithms in FL rely on the parties to establish a secure channel between each other, which leads to heavy communication overhead. Moreover, establishing secure channels between parties in FL may be unrealistic in some scenarios.
 
-In this paper, we propose self-organizing federated learning (SOFL), which is a privacy-preserving FL framework based on secure multi-party computation (MPC) and simplified consensus algorithm. Our method adopts secret sharing to hide local model parameters and runs a consensus algorithm to ensure that the communication is reliable, robust, and efficient. We also conduct a performance evaluation to demonstrate the practicality and efficiency of our proposed framework. 
+In this paper, we propose Democratic Federated Learning (DemoFL), which is a privacy-preserving FL framework based on secure multi-party computation (MPC) and simplified consensus algorithm. Our method adopts secret sharing to hide local model parameters, and runs a consensus algorithm to ensure that the communication is reliable and robust. DemoFL utilizes hierarchical structure to reduce the complexity from $O(n^2)$ to approximatively $O(n)$, and it realizes high security and robustness without reducing accuracy. We also conducted a performance evaluation to demonstrate the practicality and efficiency of our proposed framework. 
 
 \end{abstract}
 
@@ -43,9 +45,9 @@ In this paper, we propose self-organizing federated learning (SOFL), which is a 
 \label{sec:related}
 \input{sec/related}
 
-\section{Self-organizing Federated Learning}
-\label{sec:sofl}
-\input{sec/sofl}
+\section{Democratic Federated Learning}
+\label{sec:DemoFL}
+\input{sec/DemoFL}
 
 \section{Efficiency and Security Evaluation}
 \label{sec:eval}

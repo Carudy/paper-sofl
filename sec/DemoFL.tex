@@ -1,4 +1,4 @@
-In this section, we introduce the attack model and detailed design of the proposed framework Self-organizing Federated Learning. At first definitions of some symbols are listed below:
+In this section, we introduce the attack model and detailed design of the proposed framework Democratic Federated Learning. At first definitions of some symbols are listed below:
 \begin{itemize}
     \item $\textbf{N}$: The total number of parties in FL system, and the  $i^{th}$ party is marked as $P_i$.
     \item $\textbf{S}$: The server, which is the host of federated learning and helps other parties to forward messages.
@@ -14,7 +14,7 @@ Our framework is based on FedAvg, which computes the weighted average of local p
 
 $$W_{global}^{t+1} = \sum_{i=1}^n\frac{C_i}{C}W_i^t$$. 
 
-Although some researches protect $C_i$ from semi-honest attackers by means of multi-party multiplication, leakage of $C_i$ does not help attackers to reconstruct any data. In addition, $C$ can also be aggregated based on multi-party addition since it only needs addition to compute $C$ from $C_i$s. Thus, we can set $G_i = C_i * W_i$ to simplify the expression and computation. I.e., multi-party multiplication is unnecessary in this framework. Then the goal of each epoch is:
+Although some researches protect $C_i$ from semi-honest attackers by means of multi-party multiplication, leakage of $C_i$ does not help attackers to reconstruct any data. In addition, $C$ can also be aggregated based on multi-party addition since it only needs addition to compute $C$ from all the components $C_i, i \in \{1,2,3\}$. Thus, we can set $G_i = C_i * W_i$ to simplify the expression and computation. I.e., multi-party multiplication is unnecessary in this framework. Then the goal of each epoch is:
 
 $$ W_{global}^{t+1} = \frac{\sum_{i=1}^nG_i^t}{C} $$
 
@@ -27,13 +27,13 @@ An attacker can be either a party or the server, and we assume the attackers is 
 We take the server-based situation for example. Our framework consists of 4 processes: \textbf{leader election}, \textbf{key exchange}, \textbf{secure learning} and \textbf{reorganization}. In the leader election phase, the parties elect several leaders who are responsible for the MPC protocols. In the key exchange phase, all parties build secure channels with the elected leaders, based on which a party can privately communicate with leaders without leaking any information to the server. In the secure learning process, the whole system executes MPC enabled federated learning. The reorganization process is activated when a node is crashed. E.g., if a leader is crashed, the reorganization process will generate a new leader as the replacement. The 4 processes are elaborated below:
 
 \subsubsection{\textbf{Leader election}}
-A server-based federated learning system is different from other joint-systems such as blockchains. Therefore, consensus algorithms can be adjusted more compatible with federated learning models. Our framework adopted a simplified version of Raft: since we have a server in the system, the leaders can be appointed by the ``center'' instead of being elected by all participants, which can improve the performance greatly. 
+A server-based federated learning system is different from other joint-systems such as blockchains. Therefore, consensus algorithms can be adjusted more compatible with federated learning models. Our framework adopted a simplified version of Raft: since we have a server in the system, the leaders can be appointed by the ``center'' randomly instead of being elected by all participants, which can improve the performance greatly. This appointment does not destroy democracy because of the ``leader-tenure'' and ``self-recommendation'' regime, which will be introduced later.
 
 At the very first, the server randomly selects several parties as leaders. The server generates a set $L$ consisting of the identifiers of leaders. Then it sends $L$ to all parties who will participate in the federated learning process. Afterward, Key exchange protocols will be executed to construct secure channels between common parties and leaders. Note that the secure channels will be constructed between leaders with all $N$ parties instead of $n$ participants.
 
 Heart-beat is used permanently to detect whether a leader is active: we set an interval $t_h$. The server will send a ``heartbeat'' to all leaders every $t_h$ passed. If the server does not receive the response in time, it can determine that the leader is crashed and start the reorganization process.
 
-To provide higher security, ``leader-tenure'' can be adopted as an alternative enhancement. I.e., the system will revoke one's leadership regularly, and randomly select another common party as the new leader. This method can prevent collusion attacks where the server selects leaders dishonestly. It will be discussed later in Section IV. The interval can be set as 3 epoch's learning.
+To provide higher security, ``leader-tenure'' is adopted. I.e., the system will revoke one's leadership regularly, and randomly select another common party as the new leader. This method can prevent collusion attacks where the server selects leaders dishonestly. It will be discussed later in Section IV. The interval can be set as 3 epoch's learning.
 
 In the among-institutions environment, the election process is different because there is not a server helping to appoint leaders. Therefore, the leader election process is more Raft-like: first, the parties act as candidates and send ``self-recommendation'' to the others with different delays. Then, a party will vote for the first $N_l$ parties that it has received ``self-recommendation'' from. The $N_l$ parties with the most votes become leaders. The detailed algorithm can be referred to as Raft algorithm~\cite{Raft}.
 
@@ -71,7 +71,7 @@ The aggregation algorithm is the same as FedAvg~\cite{mcmahan2016communicationef
     and it is the target of FedAvg algorithm. $W_{global}$ is used to update the global model and the server will prepare for the next learning round.
 \end{enumerate}
 
-$C$ can be obtained in the same manner: replace $G_i$ with $C_i$ and the server can get $C$ privately. In fact, $C_i$ and $G_i$ are sent to leaders at the same time. Alternatively, $C_i$s can also be directly sent to the server without encrypted since they do not help attackers understanding the parameters. When the system decides to discard a party $P_i$ due to $B$, it also needs to discard $C_i$, which will change the amount of training data $C$. The pseudocode of secure learning is illustrated in Algorithm ~\ref{sec-learning}. Neither the server nor any leader can figure out what exactly a certain party's parameter is based on the information it can receive. 
+$C$ can be obtained in the same manner: replace $G_i$ with $C_i$ and the server can get $C$ privately. In fact, $C_i$ and $G_i$ are sent to leaders at the same time. Alternatively, each $C_i$ can also be directly sent to the server without encrypted since it does not help attackers understanding the parameters. When the system decides to discard a party $P_i$ due to $B$, it also needs to discard $C_i$, which will change the amount of training data $C$. The pseudocode of secure learning is illustrated in Algorithm ~\ref{sec-learning}. Neither the server nor any leader can figure out what exactly a certain party's parameter is based on the information it can receive. 
 
 \begin{figure*}[!ht]
     \centering
@@ -132,7 +132,7 @@ $C$ can be obtained in the same manner: replace $G_i$ with $C_i$ and the server 
 
 
 \subsubsection{\textbf{Reorganization}}
-The reorganization process provides the robustness for the framework. Normally, the server will notice a leader's crash within a heart-beat cycle. Meanwhile, a party will report to the server if it finds a leader is crashed. After noticing a leader is crashed, the server sends ``stop'' signals to all parties, which will stop the learning processes. Then all parties will perform an election campaign according to the simplified consensus algorithm: they send ``competition'' signals to the server. The server will receive numerous signals and the first one to arrive will be selected as the new leader. $L$ will be updated and sent to all common parties. Finally, the learning process will be restarted.
+The reorganization process provides the robustness for the framework. Normally, the server will notice a leader's crash within a heart-beat cycle. Meanwhile, a party will report to the server if it finds a leader is crashed. After noticing a leader is crashed, the server sends ``stop'' signals to all parties, which will stop the learning processes. Then all parties will perform an election campaign according to the simplified consensus algorithm: they send ``self-recommendation'' signals to the server. The server will receive numerous signals and the first one to arrive will be chosen as the new leader. $L$ will be updated and sent to all common parties. Finally, the learning process will be restarted.
 
 \subsection{Among-institutions Model}
 Since secure P2P communication is already constructed, the key exchange process is removed in this situation. In addition, consensus algorithms can be executed naturally in such an environment as it is in a decentralized system where parties are equal. Therefore, leaders are elected by voting as the original Raft does. The leader-tenure and reorganization processes also vote for new leaders instead of getting leaders from a server.
