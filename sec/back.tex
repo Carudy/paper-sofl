@@ -8,25 +8,27 @@ In this scheme, only $g_a$ and $g_b$ are sent under an unsafe condition. Attacke
 
 
 \subsection{Federated Learning}
-Federated Learning was first proposed by McMahan and the algorithm was named FedAvg~\cite{mcmahan2016communicationefficient}. FL requires a number of users to jointly train a model. It usually runs for rounds. In each round, each user will train the model based on its data and get the model's parameter. Mark $W_i^t$ as the $i^{th}$ user's parameter in the $t^{th}$ round. When all users have trained their model in round $t$, an aggregation algorithm $Agg$ will be called to compute the global model's parameter $Agg(W_1^t, W_2^t, ..., W_n^t)$, where $n$ is the total number of users. $Agg$ is weighted average in FedAvg. FL not only helps to protect users' privacy but also deals with the ``data in form of isolated islands'' problem for companies or institutions. Yang \emph{et al}. also categorized FL into horizontal, vertical and hybrid styles based on the fact that whether the data shares the same feature space or entities~\cite{yang2019federated}. 
+% Federated Learning was first proposed by McMahan and the algorithm was named FedAvg~\cite{mcmahan2016communicationefficient}. 
+
+FL requires a number of users to jointly train a model. It usually runs for rounds. In each round, each user will train the model based on its data and get the model's parameter. Denote the $i$-th user's local parameter in the $t$-th round by $W_i^t$. When all users have trained their model in the $t$-th round, an aggregation algorithm $Agg$ will be called to compute the global model's parameter $Agg(W_1^t, W_2^t, ..., W_n^t)$, where $n$ is the total number of users. For example, weighted average was adopted as $Agg$ in FedAvg~\cite{mcmahan2016communicationefficient}. FL not only helps to protect users' privacy but also deals with the ``data in form of isolated islands'' problem for companies or institutions. Yang \emph{et al}. also categorized FL into horizontal, vertical and hybrid styles based on the fact that whether the data shares the same feature space or entities~\cite{yang2019federated}. 
 
 Federated Learning can be generalized to two work environments:
 
 \begin{enumerate}
 
-    \item \textbf{Among-institutions:} In this situation FL is usually used to help companies or other institutions solving the ``data in form of isolated islands'' problem. Generally, companies and institutions are in equal status in an FL framework. Therefore, we can suppose one party can communicate with any other one privately. I.e., P2P is already enabled in this environment.
+    \item \textbf{Among-institutions:} In this situation, FL is usually used to help companies or other institutions solving the ``data in form of isolated islands'' problem. Generally, companies and institutions are in equal status in an FL framework. Therefore, we can suppose one party can communicate with any other one privately, i.e., P2P is already enabled in this environment.
 
-    \item \textbf{Server based:} In this case a company or institution adopts FL to train a model based on their users' data while protecting their privacy. An FL party is a common user, which means users' communication usually needs to go through the server. With an honest-but-curious server, all information will be eavesdropped by it. Therefore, the problem with confidence is severe in such environments.
+    \item \textbf{Server based:} In this case a company or institution adopts FL to train a model based on their users' data while protecting their privacy. An FL party is a common user, which means users' communication usually needs to go through the server. With an honest-but-curious server, all information may be eavesdropped by it. Therefore, the problem with confidence is severe in such environments.
 
 \end{enumerate}
 
-Figure~\ref{fl_model} illustrates the structures of two environments. Executing MPC protocols and consensus algorithms are at a low price in the first environment. In the second environment, if local parameters need to be protected, we need to run some key-exchange protocols first to construct secure channels among users. Google's keyboard query suggestions~\cite{yang2018applied} project was an effective application of server-based federated learning. One of our contribution is that we solved the problem in the second environment by building connections selectively and efficiently.
+Figure~\ref{fl_model} illustrates the structures of two environments. Executing MPC protocols and consensus algorithms are at a low price in the first environment. In the second environment, if local parameters need to be protected, we need to run some key-exchange protocols first to construct secure channels among users. One of our contribution is that we solved the problem in the second environment by building connections selectively and efficiently.
 
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/fl_model.png}
-    \caption{The structures of 2 work environments in Federated Learning. The left is the ``Among-institutions'' model where institutions can communicate with others directly, and the right is ``Server based'' model where parties exchange information in virtue of the server.}
+    \caption{The structures of two work environments in FL. The left is the ``Among-institutions'' model where institutions can communicate with others directly, and the right is ``Server based'' model where parties exchange information in virtue of the server.}
     \label{fl_model}
 \end{figure}
 
@@ -40,6 +42,6 @@ A secret sharing scheme involves a secret $s$, a set of $n$ parties, and a colle
 
 
 \subsection{Consensus Algorithms}
-In a distributed or multi-party system, there is always a problem with consensus. I.e., in such systems parties always need to achieve agreement on a certain value. This could be difficult without any strategy because different parties may be in different statuses and have multifarious matters. Consensus algorithms are adopted to address such problems. It is widely used in blockchain and various famous areas.
+In a distributed or multi-party system, there is always a problem with consensus, i.e., in such systems parties always need to achieve agreement on a certain value. This could be difficult without any strategy because different parties may be in different statuses and have multifarious matters. Consensus algorithms are adopted to address such problems. It is widely used in blockchain and various famous areas.
 
-Paxos was the first consensus algorithm introduced by Lamport~\cite{Paxos}. It is used in a lot of famous projects such as Ceph~\cite{Ceph}. Raft is a modification of Paxos which is more industrial-friendly~\cite{Raft}. It contains two phases: leader election and log replication. Parties can achieve agreements based on leaders. Considering that FL model is a semi-decentralized system, our framework can utilize Raft algorithm to keep several leaders, based on which MPC protocols can be executed efficiently and robustly.
+Paxos was the first consensus algorithm introduced by Lamport~\cite{Paxos}. It is used in a lot of famous projects such as Ceph~\cite{Ceph}. Raft is a modification of Paxos which is more industrial-friendly~\cite{Raft}. It contains two phases: leader election and log replication. Parties can achieve agreements based on leaders. Considering that FL model is a semi-decentralized system, our framework can utilize Raft algorithm to select several leaders, based on which MPC protocols can be executed efficiently and robustly.
