@@ -9,25 +9,31 @@ Although our work does not modify the learning module compared to other federate
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/acc.png}
-    \caption{The accuracy of FedAvg and DemoFL with IID and non-IID data in MNIST dataset. The horizontal axis $epoch$ means the total rounds that the federated learning system has been trained for.}
+    \caption{The accuracy of FedAvg~\cite{mcmahan2016communicationefficient} and DemoFL with IID data from CIFAR-10, and non-IID data from MNIST. The horizontal axis $epoch$ means the total rounds that the federated learning system has been trained for. }
     \label{acc}
 \end{figure}
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{img/leader-time.png}
-    \caption{Total time spent on computation for DH protocols of Bonawitz's FedAvg~\cite{Practical} and DemoFL. The number of clients is set as 100.}
+    \caption{The average time spent on computation in set-up process DemoFL VS different proportions of leaders.}
     \label{leader-time}
 \end{figure}
 
 \subsection{Set-up Overhead}
-In the set-up phase, our system selects several clients as leaders, and the number of leaders impacts the efficiency and a particular leader's load. We set the number of clients as $100$, and Figure~\ref{leader-time} shows the linear relation between computation time spent on Diffie Hellman key-exchange protocols and the number of leaders. The time spent on computation for DH protocols can be ignored compared to the learning process due to its low cost.
+In the set-up phase, our system selects several clients as leaders, and the number of leaders impacts the efficiency and a particular leader's load because a common user needs to build secure communication channels with all leaders. To discover the relation between number of leaders and the computaion overhead, we set the number of clients in different levels, and conducted experiments with different number of leaders. Figure~\ref{leader-time} shows the linear relation between each user's computation time spent on Diffie Hellman key-exchange protocol and the number of leaders. The overhead of time in set-up process is also very low because DemoFL has no complex calculations as Bonawitz \emph{et al}.~\cite{Practical}'s secure aggregation scheme does. In Bonawitz's scheme, participants need to calculate secret keys for all other users, and generate t-out-of-n secret shares for the pseudorandom generator (PRG) seed and their secret keys. The comparison is illustrated in Figure~\ref{avg-user-cpu}. Since Bonawitz's scheme has a time complexity of $O(n^2)$, the computation overhead of it is much higher than DemoFL. Method of Kanagavelu \emph{et al}.~\cite{Two-Phase} performs the same as Bonawitz's scheme because they also have an $O(n^2)$ set-up. Therefore, employing fewer leaders can help to improve efficiency, and in contrast, employing more leaders can are beneficial to security because a successful attack requires all leaders compromised. 
 
-Meanwhile, with more leaders, one common user needs to store more keys for leaders. Apparently, the relationship between the number of leaders and one user's storage overhead is also linear. In addition, we can consider that in the key-exchange process of Bonawitz \emph{et al}.~\cite{Practical}'s system, all common users are leaders, which requires all user-pairs to exchange keys and results in high overhead. The set-up overhead is also illustrated in Figure~\ref{leader-time}. Since it has no leaders, the computation cost does not change. Method of Kanagavelu \emph{et al}.~\cite{Two-Phase} performs the same as FedAvg because they did not take advantage of the server. Therefore, employing fewer leaders can help to improve efficiency. In contrast, employing more leaders can are beneficial to robustness because it is more flexible for t-out-of-n secret sharing methods, which we will discuss later. 
+Meanwhile, with more leaders, one common user needs to store more keys for leaders. Apparently, the relationship between the number of leaders and one user's storage overhead is also linear. However, in Bonawitz's scheme, a client needs to storge two t-out-of-n secret shares for all others. The storage complexity of DemoFL and Bonawitz's scheme is $O(N_l)$ and $O(n)$ repectively, where $N_l \ll n$. Therefore, DemoFL has a very trivial set-up overhead on both time and storage, which is friendly to individual participants such as smart phones.
 
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\columnwidth]{img/avg-user-cpu.png}
+    \caption{The average time spent on computation in set-up process of Bonawitz's secure aggregation~\cite{Practical} and DemoFL VS the number of clients. The number of leader is 3\% of all participants in DemoFL.}
+    \label{avg-user-cpu}
+\end{figure}
 
 \subsection{Efficiency}
-As introduced before, the additional computation insignificant compared to the communication overhead. Since the communication cost varies with equipment and environments, it is more sufficient to measure the overhead using the number of communications instead of wall clock time. Note that communication in our simulation means two communications in practice: a user needs to send a message to the server first, and the server forwards the message to the corresponding leader. We fixed the number of leaders to 3. The amount of communications increases with the $epoch$, and the result is displayed in Figure~\ref{comm-epoch} with the assumption that there is no dropout of packets. The number of users is another factor that impacts efficiency. We conducted experiments with the $epoch$ set to 30 and got the results shown in Figure~\ref{comm-client}. The result is the same as what we analyzed in Section IV, which means they are all of the linear time complexity. Although the number of leaders also has an influence on the number of communications, we did not conduct corresponding experiments because it is always set as a very small number. 
+As introduced before, the overhead of multi-party computation is insignificant compared to the communication overhead in DemoFL. Since the communication cost varies with equipment and environments, it is more sufficient to measure the overhead using the number of communications instead of wall clock time. Note that communication in our simulation means two communications in practice: a user needs to send a message to the server first, and the server forwards the message to the corresponding leader. We fixed the number of leaders to 3. The amount of communications increases with the $epoch$, and the result is displayed in Figure~\ref{comm-epoch} with the assumption that there is no dropout of packets. The number of users is another factor that impacts efficiency. We conducted experiments with the $epoch$ set to 30 and got the results shown in Figure~\ref{comm-client}. The result is the same as what we analyzed in Section IV, which means they are all of the linear time complexity. Although the number of leaders also has an influence on the number of communications, we did not conduct corresponding experiments because it is always set as a very small number. 
 
 
 \begin{figure}[!ht]
