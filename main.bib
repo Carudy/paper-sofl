@@ -1,3 +1,36 @@
+@inproceedings{Fredrikson15,
+author = {Fredrikson, Matt and Jha, Somesh and Ristenpart, Thomas},
+title = {Model Inversion Attacks That Exploit Confidence Information and Basic Countermeasures},
+year = {2015},
+isbn = {9781450338325},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2810103.2813677},
+doi = {10.1145/2810103.2813677},
+abstract = {Machine-learning (ML) algorithms are increasingly utilized in privacy-sensitive applications such as predicting lifestyle choices, making medical diagnoses, and facial recognition. In a model inversion attack, recently introduced in a case study of linear classifiers in personalized medicine by Fredrikson et al., adversarial access to an ML model is abused to learn sensitive genomic information about individuals. Whether model inversion attacks apply to settings outside theirs, however, is unknown. We develop a new class of model inversion attack that exploits confidence values revealed along with predictions. Our new attacks are applicable in a variety of settings, and we explore two in depth: decision trees for lifestyle surveys as used on machine-learning-as-a-service systems and neural networks for facial recognition. In both cases confidence values are revealed to those with the ability to make prediction queries to models. We experimentally show attacks that are able to estimate whether a respondent in a lifestyle survey admitted to cheating on their significant other and, in the other context, show how to recover recognizable images of people's faces given only their name and access to the ML model. We also initiate experimental exploration of natural countermeasures, investigating a privacy-aware decision tree training algorithm that is a simple variant of CART learning, as well as revealing only rounded confidence values. The lesson that emerges is that one can avoid these kinds of MI attacks with negligible degradation to utility.},
+booktitle = {Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security},
+pages = {1322–1333},
+numpages = {12},
+keywords = {machine learning, privacy, attacks},
+location = {Denver, Colorado, USA},
+series = {CCS '15}
+}
+
+@inproceedings{Tramer16,
+author = {Tram\`{e}r, Florian and Zhang, Fan and Juels, Ari and Reiter, Michael K. and Ristenpart, Thomas},
+title = {Stealing Machine Learning Models via Prediction APIs},
+year = {2016},
+isbn = {9781931971324},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {Machine learning (ML) models may be deemed confidential due to their sensitive training data, commercial value, or use in security applications. Increasingly often, confidential ML models are being deployed with publicly accessible query interfaces. ML-as-a-service ("predictive analytics") systems are an example: Some allow users to train models on potentially sensitive data and charge others for access on a pay-per-query basis.The tension between model confidentiality and public access motivates our investigation of model extraction attacks. In such attacks, an adversary with black-box access, but no prior knowledge of an ML model's parameters or training data, aims to duplicate the functionality of (i.e., "steal") the model. Unlike in classical learning theory settings, ML-as-a-service offerings may accept partial feature vectors as inputs and include confidence values with predictions. Given these practices, we show simple, efficient attacks that extract target ML models with near-perfect fidelity for popular model classes including logistic regression, neural networks, and decision trees. We demonstrate these attacks against the online services of BigML and Amazon Machine Learning. We further show that the natural countermeasure of omitting confidence values from model outputs still admits potentially harmful model extraction attacks. Our results highlight the need for careful ML model deployment and new model extraction countermeasures.},
+booktitle = {Proceedings of the 25th USENIX Conference on Security Symposium},
+pages = {601–618},
+numpages = {18},
+location = {Austin, TX, USA},
+series = {SEC'16}
+}
+
 @INPROCEEDINGS{Nasr19,  
 author={M. {Nasr} and R. {Shokri} and A. {Houmansadr}},  booktitle={2019 IEEE Symposium on Security and Privacy (SP)},   title={Comprehensive Privacy Analysis of Deep Learning: Passive and Active White-box Inference Attacks against Centralized and Federated Learning},   year={2019},  volume={},  number={},  pages={739-753},
 }
