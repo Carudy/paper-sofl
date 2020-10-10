@@ -24,7 +24,7 @@ So far, we modeled the FedAvg algorithm to a form where only secure multi-party 
 An attacker can be either a participant or the server, and we assume the attackers are \textbf{honest-but-curious} (or semi-honest). An honest-but-curious attacker gathers the information it receives instead of deviating from protocols. The attackers may establish several types of attacks:
 
 \begin{itemize}
-    \item \textbf{Membership inference attack~\cite{Nasr19}}: With this attack, the attack's purpose is to reconstruct a user's data based on the information he can eavesdrop, such as the victim's local parameter.
+    \item \textbf{Membership inference attack~\cite{Shokri17}}: With this attack, the attack's purpose is to reconstruct a user's data based on the information he can eavesdrop, such as the victim's local parameter.
 
     \item \textbf{Model extraction attack~\cite{Tramer16}}: The attacker attempts to a model similar to the one trained from FL as possible. Apparently, the local parameters are extremely helpful to the attackers.
 
@@ -75,11 +75,11 @@ The aggregation algorithm is the same as FedAvg~\cite{mcmahan2016communicationef
     \item A leader $L_j$ will record a set $B_j$, which consists of the parties that have sent messages to $L_j$. When all the parties' parameters are sent or time is up, the leaders will send all $B_j$ to the server and the server will compute the intersection as $B$. Then $B$ is sent back to all leaders. Each leader reserve parameter shares according to $B$ in case that some parties did not send parameter pieces to all leaders successfully. Parties not included in the intersection are then removed. 
 
     \item Leader $L_j$ then computes the sum of the parameters:
-    $$A_j = \sum_{i=1}^nG_i^j$$ 
+    $$A_j = \sum_{i=1}^nG_i^j \eqno{(3)}$$ 
     Afterwards, $A_j$ will be sent to the server.
 
     \item The server computes: 
-    $$W_\textrm{global} = \frac{A_1 + A_2 + A_3}{C}  = \frac{\sum_{i=1}^nG_i}{C} $$ 
+    $$W_\textrm{global} = \frac{A_1 + A_2 + A_3}{C}  = \frac{\sum_{i=1}^nG_i}{C} \eqno{(4)}$$ 
     and it is the target of FedAvg algorithm. $W_\textrm{global}$ is used to update the global model and the server will prepare for the next learning round.
 \end{enumerate}
 
