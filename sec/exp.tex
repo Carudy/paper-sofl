@@ -7,14 +7,14 @@ Although our work does not modify the learning module compared to other federate
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/acc.png}
+    \includegraphics[width=\columnwidth]{img/acc.eps}
     \caption{The accuracy of FedAvg~\cite{mcmahan2016communicationefficient} and DemoFL with IID data from CIFAR-10, and non-IID data from MNIST. The horizontal axis $epoch$ means the total rounds that the federated learning system has been trained for. }
     \label{acc}
 \end{figure}
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/leader-time.png}
+    \includegraphics[width=\columnwidth]{img/leader-time.eps}
     \caption{The average time spent on computation in set-up process DemoFL VS different proportions of leaders.}
     \label{leader-time}
 \end{figure}
@@ -26,7 +26,7 @@ Meanwhile, with more leaders, one common user needs to store more keys for leade
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/avg-user-cpu.png}
+    \includegraphics[width=\columnwidth]{img/avg-user-cpu.eps}
     \caption{The average time spent on computation in set-up process of Bonawitz's secure aggregation~\cite{Practical} and DemoFL VS the number of clients. The proportion of leaders is set to $3\%$.}
     \label{avg-user-cpu}
 \end{figure}
@@ -40,7 +40,7 @@ Measuring the communication overheads with wall clock time is difficult because 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/learning-overhead.png}
+    \includegraphics[width=\columnwidth]{img/learning-overhead.eps}
     \caption{The average running time per participant in the learning process VS epoch. Without dropouts and reorganization processes.}
     \label{learning-overhead}
 \end{figure}
@@ -51,7 +51,7 @@ The robustness of DemoFL is mainly based on the reorganizing process, which happ
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/crash-leader.png}
+    \includegraphics[width=\columnwidth]{img/crash-leader.eps}
     \caption{The ratio of communications VS number of clients and leaders.}
     \label{crash-leader}
 \end{figure}
@@ -60,10 +60,10 @@ The number of clients hardly affects the overheads. In contrast, the number of l
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/dropout-acc.png}
+    \includegraphics[width=\columnwidth]{img/dropout-acc.eps}
     \caption{The accuracy VS different $dropout\_rate$s.}
     \label{dropout-acc}
 \end{figure}
 
 \subsubsection{Network Delay and Dropout}
-Sometimes several packets cannot be received in time due to network delays or dropouts. Bonawitz \emph{et al}.'s method~\cite{Practical} has considered this issue and it has a ``double-masking'' scheme to address it, which has a high computation overhead. In DemoFL's secure learning process, a leader will not be waiting for participants'parameters permanently. It has a time limit, over which the leader will abandon waiting and send the current $B_j$ to the server (introduced in Section~\ref{sec:DemoFL}). Under this circumstance, some common parties will be recognized as having lost connection and removed from the participant-group without contributing to the learning process. However, if a party does not lose the connection while its message reached the leader late because of network delay, discarding it may influence the target model's accuracy. Since the leaders will compute the intersection no matter there are dropouts or not, the dropouts have no negative effect on efficiency. We set the $dropout\_rate$ to show the probability that a common party fails to send its parameters to leaders due to packet loss or network delay in one epoch. We then carried out several experiments to observe how package losses impact the learning process. The result is shown in Figure~\ref{dropout-acc}. The result indicates that the influence of dropouts on accuracy is acceptable when $dropout\_rate$ is no more than $10\%$: when the $Epoch$ gets larger than about $160$, the accuracy gap between no-dropout models and with-dropout models becomes insignificant. In addition, the accuracy of the model learned in the situation with $5\% dropout\_rate$ is even better than the model learned in the situation without $dropout\_rate$,  which may be caused by biases, or the inherent defects of federated learning's aggregation scheme, and this might be one of our future researches. In summary, DemoFL has a strong resistance to packet loss considering that most machine learning tasks have a large enough $Epoch_{max}$.
+Sometimes several packets cannot be received in time due to network delays or dropouts. Bonawitz \emph{et al}.'s method~\cite{Practical} has considered this issue and it has a ``double-masking'' scheme to address it, which has a high computation overhead. In DemoFL's secure learning process, a leader will not be waiting for participants'parameters permanently. It has a time limit, over which the leader will abandon waiting and send the current $B_j$ to the server (introduced in Section~\ref{sec:DemoFL}). Under this circumstance, some common parties will be recognized as having lost connection and removed from the participant-group without contributing to the learning process. However, if a party does not lose the connection while its message reached the leader late because of network delay, discarding it may influence the target model's accuracy. Since the leaders will compute the intersection no matter there are dropouts or not, the dropouts have no negative effect on efficiency. We set the $dropout\_rate$ to show the probability that a common party fails to send its parameters to leaders due to packet loss or network delay in one epoch. We then carried out several experiments to observe how package losses impact the learning process. The result is shown in Figure~\ref{dropout-acc}. The result indicates that the influence of dropouts on accuracy is acceptable when $dropout\_rate$ is no more than $10\%$: when the $Epoch$ gets larger than about $160$, the accuracy gap between no-dropout models and with-dropout models becomes insignificant. In addition, the accuracy of the model learned in the situation with $5\%$ $dropout\_rate$ is even better than the model learned in the situation without $dropout\_rate$,  which may be caused by biases, or the inherent defects of federated learning's aggregation scheme, and this might be one of our future researches. In summary, DemoFL has a strong resistance to packet loss considering that most machine learning tasks have a large enough $Epoch_{max}$.

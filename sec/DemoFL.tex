@@ -1,14 +1,24 @@
-In this section, we introduce the attack model and the detailed design of the proposed framework Democratic Federated Learning. At first definitions of some symbols are listed below:
+In this section, we introduce the attack model and the detailed design of the proposed framework Democratic Federated Learning. Figure~\ref{overview} illustrates the overview of the proposed framework. At the very first, participants of DemoFL will elect several leaders, who will be responsible for forwarding information. Key exchange phase is followed after leaders are elected. Each participant will conduct key exchange protocol with all leaders in order that they can communicate privately. Then, participants start secure training phase, which is similar with other FL frameworks. The difference is that, in aggreagtion process, participants will send their data pieces to leaders instead of the whole data to the server. Meanwhile, consensus system is always monitoring the learning process, and it will take measures when incidents are detected. Detailed framework will be introduced later.
+
+To make it easier to understand our subsequent description, some symbols that will be used are listed below:
+
 \begin{itemize}
-    \item $\textbf{N}$: The total number of users in FL system, and the  $i^{th}$ party is marked as $P_i$.
+    \item $\textbf{N}$: The total number of users in FL system, and the $i$-th party is marked as $P_i$.
     \item $\textbf{S}$: The server, which is the host of federated learning and helps other users to forward messages.
     \item $\textbf{frac}$: The fraction of users that will participate in the learning process each round.
     \item $\textbf{n}$: The number of users that will be chosen to train the model in each epoch. $n = N * frac$.
     \item $\textbf{N}_l$: Number of leaders selected from all $N$ users.
     \item $\textbf{L}$: The set of leaders. $L = {L_i}$.
-    \item $\textbf{W}$: The parameters of a machine learning model. $W_i$ means the $i^{th}$ party's local parameter, and $W_\textrm{global}$ is the global model's parameter.
-    \item $\textbf{C}$: The total number of training data. $C = \sum_{i=1}^nC_i$, where $C_i$ is the number of training data of the $i^{th}$ party $P_i$.
+    \item $\textbf{W}$: The parameters of a machine learning model. $W_i$ means the $i$-th party's local parameter, and $W_\textrm{global}$ is the global model's parameter.
+    \item $\textbf{C}$: The total number of training data. $C = \sum_{i=1}^nC_i$, where $C_i$ is the number of training data of the $i$-th party $P_i$.
 \end{itemize}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{img/overview.eps}
+    \caption{The overview of DemoFL. It contains 4 modules: leader election, key exchange, secure learning and reorganization. Secure learning process is a loop, and it usually happens a number of times.}
+    \label{overview}
+\end{figure}
 
 Our framework uses the same aggregation scheme as FedAvg, which computes the weighted average of local parameters as the global parameter. In epoch $t+1$, the server's target is to compute the following formula:
 
@@ -36,12 +46,12 @@ All these attacks can exploit the local parameters which have a high probability
 
 
 \subsection{Framework Design}
-We take the server-based situation for example. DemoFL consists of four processes: \textbf{leader election}, \textbf{key exchange}, \textbf{secure learning} and \textbf{reorganization}. In the leader election phase, the participants elect several leaders who will gather incomplete information in MPC protocols. In the key exchange phase, all participants build secure channels with the elected leaders, based on which a participant can privately communicate with leaders without leaking any information to the server. In the secure learning process, the whole system executes MPC enabled federated learning. The reorganization process is activated when a node is crashed. E.g., if a leader is crashed, the reorganization process will generate a new leader as the replacement. The four processes are elaborated below:
+We take the server-based situation for example. DemoFL consists of four processes: \textbf{leader election}, \textbf{key exchange}, \textbf{secure learning} and \textbf{reorganization}. In the leader election phase, the participants elect several leaders who will gather incomplete information in MPC protocols. In the key exchange phase, all participants build secure channels with the elected leaders, based on which a participant can privately communicate with leaders without leaking any information to the server. In the secure learning process, the whole system executes MPC enabled federated learning. The reorganization process is activated when a node is crashed. And, if crashes of nodes are detected, the reorganization process will generate a new leader as the replacement. The four processes are elaborated as following:
 
 \subsubsection{\textbf{Leader election}}
 A server-based federated learning system is different from other multi-party systems such as blockchains, where users are equal. Therefore, consensus algorithms can be adjusted more compatible with federated learning models. Our consensus algorithm adopted two prominent features of Raft: ``heartbeat'' and ``self-recommendation''. ``Self-recommendation'' is the key to ``democracy''. At the very first, every participant sends the ``self-recommendation'' message to the server, and the first $N_l$ messages to arrive will be chosen as leaders. To address the inequities caused by the network differences, each party will wait for a short random time before it sends a ``self-recommendation'' message. This short random time does not need to be long to protect democracy, and it can be set within $5$ seconds. 
 
-When all $N_l$ leaders have been picked out, the server generates a set $L$ consisting of the identifiers of leaders. Then it sends $L$ to all participants who will participate in the federated learning process. Those participants who are not leaders are called common users or common clients. Afterward, Key exchange protocols will be executed to construct secure channels between common participants and leaders. Note that the secure channels will be constructed between leaders with all $N$ participants instead of $n$ participants.
+When all $N_l$ leaders have been picked out, the server generates a set $L$ consisting of the identifiers of leaders. Then it sends $L$ to all participants who will participate in the federated learning process. Those participants who are not leaders are called \textbf{common users} or \textbf{common clients}. Afterward, Key exchange protocols will be executed to construct secure channels between common participants and leaders. Note that the secure channels will be constructed between leaders with all $N$ participants instead of $n$ participants.
 
 The technique of ``heartbeat'' is used permanently to detect whether a leader is active: we set an interval $t_h$. The server will send a ``heartbeat'' to all leaders every $t_h$ passed. If the server does not receive the response in time, it can determine that the leader is crashed and start the reorganization process.
 
@@ -51,7 +61,7 @@ In the among-institutions environment, the election process is different because
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{img/leader-user.png}
+    \includegraphics[width=0.9\columnwidth]{img/leader-user.eps}
     \caption{The institution can communicate with all users directly while all the leader-user pair share a secret key used for private communication. The server helps to forward encrypted messages from which it can know nothing.}
     \label{leader-user}
 \end{figure}
@@ -70,7 +80,7 @@ The aggregation algorithm is the same as FedAvg~\cite{mcmahan2016communicationef
 \begin{enumerate}
     \item All the selected parties train the model locally. And a party $P_i$ will get a parameter $G_i$.
     
-    \item Each $G_i$ is divided into 3 pieces $G_i^1$, $G_i^2$ and $G_i^3$, where $G_i = G_i^1 + G_i^2 + G_i^3$. Then $G_i^j$ is sent to the $j^{th}$ leader $L_j$ respectively.
+    \item Each $G_i$ is divided into 3 pieces $G_i^1$, $G_i^2$ and $G_i^3$, where $G_i = G_i^1 + G_i^2 + G_i^3$. Then $G_i^j$ is sent to the $j$-th leader $L_j$ respectively.
     
     \item A leader $L_j$ will record a set $B_j$, which consists of the parties that have sent messages to $L_j$. When all the parties' parameters are sent or time is up, the leaders will send all $B_j$ to the server and the server will compute the intersection as $B$. Then $B$ is sent back to all leaders. Each leader reserve parameter shares according to $B$ in case that some parties did not send parameter pieces to all leaders successfully. Parties not included in the intersection are then removed. 
 
@@ -87,8 +97,8 @@ $C$ can be obtained in the same manner: replace $G_i$ with $C_i$ and the server 
 
 \begin{figure*}[!ht]
     \centering
-    \includegraphics[width=2\columnwidth]{img/alg.png}
-    \caption{The flow chart of the secure learning process. It is based on the fact that common users have already constructed secure communication channels with leaders. Note that a participant can be a leader and a common user at the same time, and the averaging was already done by leaders, therefore, the server only needs to summarize the global parameter pieces. After step \ding{177}, the process will enter the next epoch and restart from step \ding{172} if the current epoch has not reached the $epoch_{max}$.}
+    \includegraphics[width=1.8\columnwidth]{img/alg.eps}
+    \caption{The flow chart of the secure learning process. It is based on the fact that common users have already constructed secure communication channels with leaders. Note that a participant can be a leader and a common user at the same time, and the averaging was already done by leaders, therefore, the server only needs to summarize the global parameter pieces. After step $f$, the process will enter the next epoch and restart from step $a$ if the current epoch has not reached the $epoch_{max}$.}
     \label{fig-alg}
 \end{figure*}
 
